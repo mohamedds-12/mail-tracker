@@ -62,7 +62,7 @@ class SNSController extends Controller
     protected function process_notification($message)
     {
         $message = json_decode($message->offsetGet('Message'));
-        switch ($message->notificationType) {
+        switch ($message->eventType) {
             case 'Delivery':
                 $this->process_delivery($message);
                 break;

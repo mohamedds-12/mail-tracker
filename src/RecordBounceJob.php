@@ -39,7 +39,11 @@ class RecordBounceJob implements ShouldQueue
 
     public function handle()
     {
-        $sent_email = MailTracker::sentEmailModel()->newQuery()->where('message_id', $this->message->mail->messageId)->first();
+        $emailHash = collect($this->message->mail->headers)->where('name', 'X-Mailer-Hash')->first()?->value;
+        if ($emailHash) { 
+            $sent_email = MailTracker::sentEmailModel()->newQuery()->where('hash', $emailHash)->first();
+        }
+        
         if ($sent_email) {
             $meta = collect($sent_email->meta);
             $current_codes = [];
